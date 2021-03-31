@@ -1,0 +1,32 @@
+upstream guyamoe {
+    server unix:///home/milleniumbug/mahoushoujobu/app/nginx/socket/guya.sock; # for a file socket
+}
+
+server {
+	listen 80;
+	listen [::]:80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+        server_name mahoushoujobu.com;
+
+	ssl_certificate /etc/letsencrypt/live/mahoushoujobu.com/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/mahoushoujobu.com/privkey.pem;
+
+	client_max_body_size 25M;
+
+	location /media {
+		alias /home/milleniumbug/mahoushoujobu/app/media;
+	}
+
+	location ~ ^/static/(.*) {
+		root /home/milleniumbug/mahoushoujobu/app;
+		try_files /static_global/$1 /homepage/static/$1 /reader/static/$1 =404;
+	}
+
+	location / {
+		uwsgi_pass guyamoe;
+		include /home/milleniumbug/mahoushoujobu/app/nginx/uwsgi_params;
+	}
+}
+
