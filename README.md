@@ -15,7 +15,7 @@ Testing Supported By<br/>
 ## Install
 1. Create a venv for Guyamoe in your home directory.
 ```
-virtualenv ~/guyamoe
+virtualenv -p python3 ~/guyamoe
 ```
 
 2. Clone Guyamoe's source code into the venv.
@@ -33,17 +33,24 @@ cd ~/guyamoe/app && source ../bin/activate
 pip3 install -r requirements.txt
 ```
 
+At this point you may get an error that pg_config is missing. [Install development version of PostgreSQL.](https://stackoverflow.com/questions/11618898/pg-config-executable-not-found)
+
 5. Change the value of the `SECRET_KEY` variable to a randomly generated string.
 ```
 sed -i "s|\"o kawaii koto\"|\"$(openssl rand -base64 32)\"|" guyamoe/settings/base.py
 ```
 
-6. Generate the default assets for Guyamoe.
+6. Upstream repo don't have migrations set up because something. It's possible it will be fixed later, in the meantime do this.
+```
+mkdir misc/migrations && touch misc/migrations/__init__.py
+```
+
+7. Generate the default assets for Guyamoe.
 ```
 python3 init.py
 ```
 
-7. Create an admin user for Guyamoe.
+8. Create an admin user for Guyamoe.
 ```
 python3 manage.py createsuperuser
 ```
@@ -67,6 +74,8 @@ E.g. `Kaguya-Wants-To-Be-Confessed-To` for `<series-slug-name>`.
 
 Now the site should be accessible on localhost:8000
 
+Django docs say this: [DO NOT USE THIS SERVER IN A PRODUCTION SETTING. It has not gone through security audits or performance tests.](https://docs.djangoproject.com/en/3.1/ref/django-admin/). Below is the section on my attempt on making it work good enough for production, on Debian.
+
 ## Other info
 Relevant URLs (as of now): 
 
@@ -78,3 +87,38 @@ Relevant URLs (as of now):
 - `/reader/series/<series_slug_name>/<chapter_number>/<page_number>` - url scheme for reader opened on specfied page of chapter of series.
 - `/api/series/<series_slug_name>` - all series data requested by reader frontend
 - `/media/manga/<series_slug_name>/<chapter_number>/<page_file_name>` - url scheme to used by reader to actual page as an image.
+
+# Debian setup
+
+The `nginx` directory contains systemd module, the script and nginx config. Nginx is a web server that will communicate with guyamoe Django app through uWSGI.
+These instructions make a lot of assumptions. Adjust these instructions and configuration to your own needs.
+
+Install uWSGI
+
+```
+pip3 install uwsgi
+```
+
+Add the user that will be running the app to www-data
+
+```
+sudo usermod -a -G www-data milleniumbug
+```
+
+Set the correct permissions
+
+```
+chmod +x nginx/start.sh
+sudo chown milleniumbug:www-data nginx/socket
+sudo chown g+s nginx/socket
+```
+
+Copy the config to appropriate places
+
+```
+sudo cp nginx/guyamoe.service /etc/systemd/system
+sudo cp nginx/guya-site-nginx /etc/nginx/sites-available/guyamoe
+sudo ln -s /etc/nginx/sites-available/guyamoe /etc/nginx/sites-enabled/guyamoe
+```
+
+Use certbot to set up TLS certificate for your own domain
