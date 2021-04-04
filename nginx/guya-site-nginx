@@ -5,6 +5,12 @@ upstream guyamoe {
 server {
 	listen 80;
 	listen [::]:80;
+	server_name mahoushoujobu.com;
+	return 301 https://mahoushoujobu.com$request_uri;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+}
+
+server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
@@ -21,10 +27,15 @@ server {
 
 	location ~ ^/static/(.*) {
 		root /home/milleniumbug/mahoushoujobu/app;
-		try_files /static_global/$1 /homepage/static/$1 /reader/static/$1 =404;
+		try_files /static_global/$1 /homepage/static/$1 /reader/static/$1 @process_in_app;
 	}
 
 	location / {
+		uwsgi_pass guyamoe;
+		include /home/milleniumbug/mahoushoujobu/app/nginx/uwsgi_params;
+	}
+
+	location @process_in_app {
 		uwsgi_pass guyamoe;
 		include /home/milleniumbug/mahoushoujobu/app/nginx/uwsgi_params;
 	}

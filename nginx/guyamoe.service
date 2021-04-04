@@ -4,11 +4,12 @@ After=network.target
 StartLimitIntervalSec=0
 
 [Service]
-Type=simple
-Restart=always
-RestartSec=3
+Type=notify
+Restart=on-failure
+RestartSec=2
 User=milleniumbug
-ExecStart=/home/milleniumbug/mahoushoujobu/app/nginx/start.sh
+Environment="ALLOWED_HOSTS=mahoushoujobu.com"
+ExecStart=/home/milleniumbug/mahoushoujobu/bin/uwsgi --ini /home/milleniumbug/mahoushoujobu/app/nginx/uwsgi.ini --module guyamoe.wsgi
 StandardOutput=syslog
 StandardError=syslog
 WorkingDirectory=/home/milleniumbug/mahoushoujobu/app
