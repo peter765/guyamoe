@@ -13,7 +13,7 @@ from django.db.models import Min, F, Max, Q
 
 from homepage.middleware import ForwardParametersMiddleware
 from reader.middleware import OnlineNowMiddleware
-from reader.models import Chapter, Series, Volume, HitCount, Person
+from reader.models import Chapter, Series, Volume, HitCount, Person, Group
 from reader.views import series_page_data
 from itertools import repeat
 
@@ -23,16 +23,22 @@ from itertools import repeat
 def admin_home(request):
     online = cache.get("online_now")
     peak_traffic = cache.get("peak_traffic")
+
+    groups = [str(group.name) for group in Group.objects.all()]
+    authors = [str(author.name) for author in Person.objects.all()]
     return render(
         request,
         "homepage/admin_home.html",
         {
             "online": len(online) if online else 0,
             "peak_traffic": peak_traffic,
+            "groups": groups,
+            "authors": authors,
             "template": "home",
             "version_query": settings.STATIC_VERSION,
         },
     )
+
 
 cache_control(public=True, max_age=60, s_maxage=60)
 def chapters_data():
