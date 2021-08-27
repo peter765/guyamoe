@@ -23,6 +23,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "hachirumi.com",
+    "slow.hachirumi.com",
     "localhost",
 ]
 

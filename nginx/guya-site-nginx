@@ -11,7 +11,7 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name hachirumi.com ;
+    server_name hachirumi.com slow.hachirumi.com;
     return 404; # managed by Certbot
 }
 
@@ -23,7 +23,7 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-    server_name hachirumi.com ;
+    server_name hachirumi.com slow.hachirumi.com;
 
     # To enable maintenance move this file from homepage/template/homepage/maintenance to the root.
     if (-f /home/hachi/guyamoe/maintenance.html) {

@@ -24,7 +24,7 @@ CANONICAL_ROOT_DOMAIN = "localhost:8000"
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "hachirumi.com"]
+ALLOWED_HOSTS = ["localhost", "hachirumi.com", "slow.hachirumi.com"]
 
 SITE_ID = 1
 
