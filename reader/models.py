@@ -43,14 +43,14 @@ class Series(models.Model):
     slug = models.SlugField(unique=True, max_length=200)
     author = models.ForeignKey(
         Person,
-        blank=True,
+        blank=False,
         null=True,
         on_delete=models.SET_NULL,
         related_name="series_author",
     )
     artist = models.ForeignKey(
         Person,
-        blank=True,
+        blank=False,
         null=True,
         on_delete=models.SET_NULL,
         related_name="series_artist",
