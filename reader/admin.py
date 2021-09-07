@@ -73,6 +73,7 @@ class SeriesAdmin(admin.ModelAdmin):
          <li><a href=""><img src="https://i.imgur.com/mLCeebg.png" alt="Skeb"/>Artist\'s Skeb</a></li>\n\
          <li><a href=""><img src="https://i.imgur.com/qr4qCHu.png" alt="Skeb"/>Artist\'s Fantia</a></li>\n\
          <li><a href=""><img src="https://i.imgur.com/gpw5ezu.png" alt="Skeb"/>Artist\'s Tumblr</a></li>\n\
+         <li><a href=""><img src="https://i.imgur.com/TysezOa.png" alt="Skeb"/>Artist\'s Youtube</a></li>\n\
          <li><a href=""><img src="https://i.imgur.com/dzEFKZB.png" alt="Skeb"/>Artist\'s Website</a></li>\n\
          </ul>\n'))
         return form
