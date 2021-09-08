@@ -5,6 +5,7 @@ Generalized manga reading framework for scanlation groups. This is a fork of [Gu
 Difference from the original:
  - You should only need to update `about.html`, `layout.html`, `base.py`, `prod.py` and of course the logos to have a functional website for you scanlation group.
  - Remove hardcoded reference to Kaguya-sama in source code. The website will work even if there is no manga in the database.
+ - When uploading a chapter, the pages are human-sorted (e.g. `1.png`, `2.png`, ..., `10.png`), so zero padding is not a strict requirement.
  - Add a homepage where the series are shown as a gallery
  - Add a page to see the list of chapters from all series
  - Add a page that list all the series from an artist/author

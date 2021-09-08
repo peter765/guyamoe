@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
+import logging
 import subprocess
 from pathlib import Path
 
@@ -170,3 +172,24 @@ HOME_BRANDING_DESCRIPTION = "Read our latest chapters here."
 HOME_BRANDING_IMAGE_URL = "https://danke.moe/static/img/thumbnail.png"
 
 IMAGE_PROXY_URL = "https://proxy.f-ck.me"
+
+
+# Please ignore the following, this their just to make it passes our unit tests without trying to run migrations
+class DisableMigrations(object):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return None
+
+
+TESTS_IN_PROGRESS = False
+if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+    logging.disable(logging.CRITICAL)
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    TESTS_IN_PROGRESS = True
+    MIGRATION_MODULES = DisableMigrations()

@@ -5,6 +5,7 @@ import time
 import zipfile
 from datetime import datetime
 
+import natsort
 from discord import Embed, RequestsWebhookAdapter, Webhook
 from django.conf import settings
 from django.core.cache import cache
@@ -14,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from reader.models import Chapter, ChapterIndex, Group, Series, Volume, Person
 from reader.users_cache_lib import get_user_ip
+
 
 from .api import (
     all_groups,
@@ -154,17 +156,14 @@ def download_chapter(request, series_slug, chapter):
     return resp
 
 
+def sort_naturally_input_filenames(filenames):
+    # Let's hope that natsort can deal with all the silly number conversions it receives.
+    return natsort.natsorted(filenames, alg=natsort.PATH | natsort.IGNORECASE | natsort.REAL)
+
+
 def save_zip_file(input_zip_file, chapter_folder, group_folder):
     with zipfile.ZipFile(input_zip_file) as zip_file:
-        zipped_pages = zip_file.namelist()
-        if all(
-            [x.split(" ", 1)[0].split(".", 1)[0].isdigit() for x in zipped_pages]
-        ):
-            all_pages = sorted(
-                zipped_pages, key=lambda x: int(x.split(" ", 1)[0].split(".", 1)[0])
-            )
-        else:
-            all_pages = sorted(zipped_pages)
+        all_pages = sort_naturally_input_filenames(zip_file.namelist())
         padding = len(str(len(all_pages)))
         for idx, page in enumerate(all_pages):
             extension = page.rsplit(".", 1)[1]
