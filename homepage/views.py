@@ -94,14 +94,14 @@ def chapters_data():
     return chapters_page_dt
 
 
-def series_data(include_series=False, include_oneshots=False, author_slug=None, nsfw=False):
+def series_data(include_series=False, include_oneshots=False, author_slug=None, nsfw=False, filter_based_on_nsfw=True):
     assert include_series or include_oneshots, "You must include something."
     to_label = {
         (True, True): "ongoing",
         (False, True): "oneshots",
         (True, False): "series",
     }
-    cache_label = f"{to_label[(include_series, include_oneshots)]}_{'nsfw' if nsfw else 'sfw'}_page_dt"
+    cache_label = f"{to_label[(include_series, include_oneshots)]}_{'nsfw' if nsfw else 'sfw'}_{'only' if filter_based_on_nsfw else 'not_only'}_page_dt"
     if author_slug:
         cache_label += author_slug
     series_page_dt = cache.get(cache_label)
@@ -111,7 +111,9 @@ def series_data(include_series=False, include_oneshots=False, author_slug=None, 
             only_chapter_from_type = only_chapter_from_type.filter(series__is_oneshot=include_oneshots)
         if author_slug:
             only_chapter_from_type = only_chapter_from_type.filter(Q(series__author__slug=author_slug) | Q(series__artist__slug=author_slug))
-        series_latest_uploaded = only_chapter_from_type.filter(series__is_nsfw=nsfw).order_by('series').values('series').annotate(Max('uploaded_on'))
+        if filter_based_on_nsfw:
+            only_chapter_from_type = only_chapter_from_type.filter(series__is_nsfw=nsfw).order_by('series').values('series').annotate(Max('uploaded_on'))
+        series_latest_uploaded = only_chapter_from_type.order_by('series').values('series').annotate(Max('uploaded_on'))
         latest_chapters = Chapter.objects.select_related("series").filter(uploaded_on__in=series_latest_uploaded.values_list('uploaded_on__max', flat=True)).order_by("-uploaded_on")
         volumes = Volume.objects.select_related("series").all()
         series_to_first_volume = {}
@@ -170,7 +172,7 @@ def all_chapters(request):
 @cache_control(public=True, max_age=300, s_maxage=300)
 @decorator_from_middleware(OnlineNowMiddleware)
 def all_ongoing(request):
-    data = series_data(include_series=True, include_oneshots=True)
+    data = series_data(include_series=True, include_oneshots=True, filter_based_on_nsfw=False)
     data["version_query"] = settings.STATIC_VERSION
     # data["page_title"] = "Series"
     return render(request, "homepage/show_series.html", data)
@@ -179,7 +181,7 @@ def all_ongoing(request):
 @cache_control(public=True, max_age=300, s_maxage=300)
 @decorator_from_middleware(OnlineNowMiddleware)
 def all_series(request):
-    data = series_data(include_series=True)
+    data = series_data(include_series=True, filter_based_on_nsfw=False)
     data["version_query"] = settings.STATIC_VERSION
     data["page_title"] = "Series"
     return render(request, "homepage/show_series.html", data)
@@ -188,7 +190,7 @@ def all_series(request):
 @cache_control(public=True, max_age=300, s_maxage=300)
 @decorator_from_middleware(OnlineNowMiddleware)
 def all_oneshots(request):
-    data = series_data(include_oneshots=True)
+    data = series_data(include_oneshots=True, filter_based_on_nsfw=False)
     data["version_query"] = settings.STATIC_VERSION
     data["page_title"] = "Oneshots"
     return render(request, "homepage/show_series.html", data)
@@ -196,7 +198,7 @@ def all_oneshots(request):
 @cache_control(public=True, max_age=300, s_maxage=300)
 @decorator_from_middleware(OnlineNowMiddleware)
 def all_nsfw(request):
-    data = series_data(include_series=True, include_oneshots=True, nsfw=True)
+    data = series_data(include_series=True, include_oneshots=True, nsfw=True, filter_based_on_nsfw=True)
     data["version_query"] = settings.STATIC_VERSION
     data["page_title"] = "NSFW"
     return render(request, "homepage/show_series.html", data)
