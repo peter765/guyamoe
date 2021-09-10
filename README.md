@@ -3,15 +3,17 @@ Website for the [Hachirumi](https://hachirumi.com) scanlation group.
 Generalized manga reading framework for scanlation groups. This is a fork of [Guya.moe](https://github.com/appu1232/guyamoe), a website focus on Kaguya-sama manga. Most of the nginx configs are from [mahoushoujobu.com](https://github.com/milleniumbug/guyamoe)'s fork.
 
 Difference from the original:
- - You should only need to update `about.html`, `layout.html`, `base.py`, `prod.py` and of course the logos to have a functional website for you scanlation group.
+ - You should only need to update `about.html`, `layout.html`, `base.py`, `prod.py` and of course the logos to have a functional website for your scanlation group.
  - Remove hardcoded reference to Kaguya-sama in source code. The website will work even if there is no manga in the database.
+ - When uploading a chapter, the pages are human-sorted (e.g. `1.png`, `2.png`, ..., `10.png`), so zero padding (e.g. `01.png`, `02.png`, ..., `10.png`) is not a strict requirement.
  - Add a homepage where the series are shown as a gallery
  - Add a page to see the list of chapters from all series
  - Add a page that list all the series from an artist/author
  - Can mark a chapter as NSFW to get a age warnings popup
  - Can post a message to a Discord channel when a new chapter is uploaded
  - Sitemap.xml works even if you don't have pages
- - In embedded link to chapters a preview of the first page is shown, instead of the site's logo
+ - In embedded link to chapters, a preview of the first page is shown, instead of the site's logo
+ - Quick oneshot upload form in `/admin_home`
 
 
 ⚠ **Note:** These instructions below will not result in a general purpose CMS due to the amount of hardcoded assets.
@@ -23,7 +25,7 @@ Limitations:
  - Only one unique numbered chapter per scanlation group per series.
  - No multilingual support, so you cannot have the same chapter in different languages.
  - Only one group assigned to each chapter. One work around for collaborations is to create a group with the name of both groups.
- - No tagging system. The only tag currently is `is_oneshot`.
+ - No tagging system. The only tag currently is `is_oneshot` and `is_nsfw`.
 
 ## Prerequisites 
 - git

@@ -1143,8 +1143,6 @@ main a {
 	display: none;
 }
 
-
-
 .page-series .card {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
@@ -1414,16 +1412,27 @@ main a {
 	}
 }
 
+.embed-responsive .card-img-top {
+    object-fit: cover;
+}
+.embed-responsive-2by3::before{
+    padding-top:150%
+}
+.embed-responsive-7by10::before{
+    padding-top:141.17%
+}
+
 @media (min-width: 1000px) {
 	.manga-card .manga-links {
 		min-width: 37em;
 	}
 }
-@media (min-width: 1400px) {
-	body {
-		font-size: 1.1em;
-	}
-}
+
+/*@media (min-width: 1400px) {
+       body {
+               font-size: 1.1em;
+       }
+}*/
 
 .misc_pages_list body {
 	display: block !important;

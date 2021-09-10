@@ -35,7 +35,7 @@ server {
         rewrite ^(.*)$ /maintenance.html break ;
     }
 
-    client_max_body_size 100M;
+    client_max_body_size 150M;
 
     location /media {
         expires 365d;
