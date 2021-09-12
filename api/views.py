@@ -158,7 +158,7 @@ def download_chapter(request, series_slug, chapter):
 
 def sort_naturally_input_filenames(filenames):
     # Let's hope that natsort can deal with all the silly number conversions it receives.
-    return natsort.natsorted(filenames, alg=natsort.PATH | natsort.IGNORECASE | natsort.REAL)
+    return natsort.natsorted(filenames, alg=natsort.PATH | natsort.IGNORECASE | natsort.FLOAT)
 
 
 def save_zip_file(input_zip_file, chapter_folder, group_folder):

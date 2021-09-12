@@ -31,3 +31,24 @@ class InputFilenameTestCase(TestCase):
 
     def test_basic_prefix_text_split_non_zeropad_non_zeropad_point(self):
         self.shuffle_and_compare(['ch1_1.png', 'ch1_1p1.png', 'ch1_1p10.png', 'ch1_1p11.png', 'ch2_1.png'])
+
+    def test_check_numbered_are_not_intepreted_as_negative(self):
+        self.shuffle_and_compare(['ch-1.01.png', 'ch-1.1.png', 'ch-1.2.png', 'ch-1.2.png'])
+
+    def test_twitter_upload_without_renaming(self):
+        self.shuffle_and_compare([
+            "renrenmacchiato-1433015388736921602-20210901_053427-img1.jpg",
+            "renrenmacchiato-1433015388736921602-20210901_053427-img2.jpg",
+            "renrenmacchiato-1433015388736921602-20210901_053427-img3.jpg",
+            "renrenmacchiato-1433015388736921602-20210901_053427-img4.jpg",
+            "renrenmacchiato-1433015401684746247-20210901_053430-img1.jpg",
+            "renrenmacchiato-1433015401684746247-20210901_053430-img2.jpg",
+            "renrenmacchiato-1433015401684746247-20210901_053430-img3.jpg",
+            "renrenmacchiato-1433015401684746247-20210901_053430-img4.jpg",
+            "renrenmacchiato-1433015414301204487-20210901_053433-img1.jpg",
+            "renrenmacchiato-1433015414301204487-20210901_053433-img2.jpg",
+            "renrenmacchiato-1433015414301204487-20210901_053433-img3.jpg",
+            "renrenmacchiato-1433015414301204487-20210901_053433-img4.jpg",
+            "renrenmacchiato-1433015425982361600-20210901_053436-img1.jpg",
+            "renrenmacchiato-1433015425982361600-20210901_053436-img2.jpg",
+        ])
