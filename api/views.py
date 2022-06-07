@@ -63,6 +63,7 @@ def get_all_series(request):
                 "cover": cover_vol_url,
                 "groups": all_groups(),
                 "last_updated": int(datetime.timestamp(last_updated))
+                "is_nsfw": series.is_nsfw
                 if last_updated
                 else 0,
             }
